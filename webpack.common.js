@@ -1,13 +1,22 @@
+const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 
 module.exports = {
-    output: {
-        filename: "main.[hash].js"
+    module: {
+        rules: [{
+            test: /\.css$/,
+            include: path.resolve(__dirname, "src"),
+            use: [
+                'style-loader',
+                'css-loader'
+            ]
+        }, {
+            test: /\.(png|svg|jpg|gif)$/,
+            include: path.resolve(__dirname, "src"),
+            loader: 'file-loader'
+        }]
     },
     plugins: [
-        // 清理dist目录
-        new CleanWebpackPlugin(),
         // 自动根据模板index.ejs生成index.html，并在index.html中引入带有hash的js
         new HtmlWebpackPlugin({
             template: './index.ejs',
