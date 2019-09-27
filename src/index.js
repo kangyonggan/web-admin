@@ -1,6 +1,7 @@
 import Img2 from './assets/images/2.png';
 import Style2 from './assets/style/style2.css';
 import {square} from './math';
+import Vue from 'Vue';
 
 console.log('3 * 3 = ' + square(3));
 document.getElementById('app').classList.add('blue');
