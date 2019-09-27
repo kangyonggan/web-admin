@@ -1,7 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
@@ -51,9 +50,7 @@ module.exports = {
             filename: 'style.[hash].css'
         }),
         // 清理dist目录
-        new CleanWebpackPlugin(),
-        // 清除未依赖的代码并压缩
-        // new UglifyJSPlugin()
+        new CleanWebpackPlugin()
     ],
     optimization: {
         moduleIds: 'hashed',
