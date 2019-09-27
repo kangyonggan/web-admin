@@ -2,9 +2,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const devMode = process.env.NODE_ENV !== 'production';
+const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
     mode: "development",
@@ -14,8 +12,6 @@ module.exports = {
         second: './src/second.js'
     },
     output: {
-        // filename: '[name].bundle.js',
-        // chunkFilename: '[name].bundle.js', // Dynamic Imports【动态导入】
         filename: '[name].[contenthash].js',
         chunkFilename: '[name].[contenthash].js',
         path: path.resolve(__dirname, 'dist')
@@ -27,8 +23,10 @@ module.exports = {
         rules: [{
             test: /\.css$/,
             include: path.resolve(__dirname, "src"),// 仅加载src目录下的资源
-            use: ['style-loader', 'css-loader']
-            // use: [MiniCssExtractPlugin.loader, 'css-loader'],
+            use: ExtractTextWebpackPlugin.extract({
+                use: ['css-loader'],
+                fallback: 'style-loader'
+            })
         }, {
             test: /\.(png|svg|jpg|gif)$/,
             include: path.resolve(__dirname, "src"),// 仅加载src目录下的资源
@@ -48,9 +46,10 @@ module.exports = {
             chunks: ['second', 'vendors', 'runtime'],
             inject: false
         }),
-        // new MiniCssExtractPlugin({
-        //     filename: '[name].css',
-        // }),
+        // 把全部入口js中css全部提取到一个样式文件中
+        new ExtractTextWebpackPlugin({
+            filename: 'style.[hash].css'
+        }),
         // 清理dist目录
         new CleanWebpackPlugin(),
         // 清除未依赖的代码并压缩
@@ -69,14 +68,7 @@ module.exports = {
                     test: /[\\/]node_modules[\\/]/,
                     name: 'vendors',
                     chunks: 'all'
-                },
-                // 把所有的css提取到一个文件中
-                // styles: {
-                //     name: 'styles',
-                //     test: /\.css$/,
-                //     chunks: 'all',
-                //     enforce: true,
-                // }
+                }
             }
         }
     }
