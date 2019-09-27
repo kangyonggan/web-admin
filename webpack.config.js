@@ -23,7 +23,18 @@ module.exports = {
             test: /\.css$/,
             include: path.resolve(__dirname, "src"),// 仅加载src目录下的资源
             use: ExtractTextWebpackPlugin.extract({
-                use: ['css-loader'],
+                // ?minimize 压缩css。
+                use: ['css-loader?minimize', {
+                    loader: 'postcss-loader',// 补全后缀，兼容不同浏览器
+                    options: {
+                        plugins: () => [
+                            // 补全前缀，兼容不同浏览器
+                            require('autoprefixer') ({
+                                overrideBrowserslist: ['last 2 version', '>1%', 'ios 7']
+                            })
+                        ]
+                    }
+                }],
                 fallback: 'style-loader'
             })
         }, {
