@@ -3,12 +3,14 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const devMode = process.env.NODE_ENV !== 'production';
 
 module.exports = {
     mode: "development",
     devtool: 'inline-source-map',
     entry: {
-        app: './src/index.js',
+        index: './src/index.js',
         second: './src/second.js'
     },
     output: {
@@ -26,11 +28,7 @@ module.exports = {
             test: /\.css$/,
             include: path.resolve(__dirname, "src"),// 仅加载src目录下的资源
             use: ['style-loader', 'css-loader']
-            // 把css从js中分离出来
-            // use: ExtractTextPlugin.extract({
-            //     fallback: "style-loader",// 编译后用什么loader来提取css文件
-            //     use: "css-loader"// 指需要什么样的loader去编译文件,这里由于源文件是.css所以选择css-loader
-            // })
+            // use: [MiniCssExtractPlugin.loader, 'css-loader'],
         }, {
             test: /\.(png|svg|jpg|gif)$/,
             include: path.resolve(__dirname, "src"),// 仅加载src目录下的资源
@@ -41,12 +39,17 @@ module.exports = {
         // 自动根据模板index.ejs生成index.html，并在index.html中引入带有hash的js
         new HtmlWebpackPlugin({
             template: './index.ejs',
+            chunks: ['index', 'vendors', 'runtime'],
             inject: false
         }),
-        // 分离css样式
-        // new ExtractTextPlugin({
+        new HtmlWebpackPlugin({
+            template: './second.ejs',
+            filename: "second.html",
+            chunks: ['second', 'vendors', 'runtime'],
+            inject: false
+        }),
+        // new MiniCssExtractPlugin({
         //     filename: '[name].css',
-        //     allChunks: true
         // }),
         // 清理dist目录
         new CleanWebpackPlugin(),
@@ -66,7 +69,14 @@ module.exports = {
                     test: /[\\/]node_modules[\\/]/,
                     name: 'vendors',
                     chunks: 'all'
-                }
+                },
+                // 把所有的css提取到一个文件中
+                // styles: {
+                //     name: 'styles',
+                //     test: /\.css$/,
+                //     chunks: 'all',
+                //     enforce: true,
+                // }
             }
         }
     }

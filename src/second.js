@@ -1,5 +1,5 @@
 import Img2 from './assets/images/2.png';
-import Style1 from './assets/style/style1.css';
+import Style2 from './assets/style/style2.css';
 import {add} from './math';
 
 console.log('4 + 4 = ' + add(4, 4));
