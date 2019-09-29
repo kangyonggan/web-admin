@@ -3,9 +3,9 @@ const str = '啊实打实大啊实打实大师啊实打实大啊实打实大师�
 export function add(a, b) {
     console.log(str);
     return a + b;
-};
+}
 
 export function square(a) {
-    console.log(str);
+    console.log(str)
     return a * a;
-};
+}

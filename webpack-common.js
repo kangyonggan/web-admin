@@ -1,6 +1,5 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const ExtractTextWebpackPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
@@ -38,9 +37,7 @@ module.exports = {
         // 把全部入口js中css全部提取到一个样式文件中
         new ExtractTextWebpackPlugin({
             filename: 'style.[hash].css'
-        }),
-        // 清理dist目录
-        new CleanWebpackPlugin()
+        })
     ],
     optimization: {
         moduleIds: 'hashed',
